@@ -56,67 +56,73 @@ class _TodoScreenState extends State<TodoScreen> {
         height: double.infinity,
         width: double.infinity,
         padding: const EdgeInsets.all(10),
-        child: ListView.builder(
-            itemCount: _todos.length,
-            itemBuilder: (context, index) {
-              final todo = _todos[index];
-              return Card(
-                elevation: 5,
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(8),
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.blueGrey,
-                    child: Text(
-                      "${index + 1}",
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  onTap: () {
-                    // edit dialog
-                    showUpdateDialog(todo, index);
-                  },
-                  title: Text(
-                    todo.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    todo.description,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black87,
-                        fontSize: 10),
-                  ),
-                  trailing: Container(
-                    width: 100,
-                    child: Row(
-                      children: [
-                        Checkbox(
-                            onChanged: (value) {
-                              //value toggle
-
-                              setState(() {
-                                todo.compleated = value!;
-                                todoService.updateTodo(index, todo);
-                              });
-                            },
-                            value: todo.compleated),
-                        IconButton(
-                            onPressed: () async {
-                              await todoService.deleteTodo(index);
-
-                              _loadTodos();
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            )),
-                      ],
-                    ),
-                  ),
+        child: _todos.isEmpty
+            ? Center(
+                child: Text(
+                  'No task added',
                 ),
-              );
-            }),
+              )
+            : ListView.builder(
+                itemCount: _todos.length,
+                itemBuilder: (context, index) {
+                  final todo = _todos[index];
+                  return Card(
+                    elevation: 5,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(8),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blueGrey,
+                        child: Text(
+                          "${index + 1}",
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      onTap: () {
+                        // edit dialog
+                        showUpdateDialog(todo, index);
+                      },
+                      title: Text(
+                        todo.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        todo.description,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87,
+                            fontSize: 10),
+                      ),
+                      trailing: Container(
+                        width: 100,
+                        child: Row(
+                          children: [
+                            Checkbox(
+                                onChanged: (value) {
+                                  //value toggle
+
+                                  setState(() {
+                                    todo.compleated = value!;
+                                    todoService.updateTodo(index, todo);
+                                  });
+                                },
+                                value: todo.compleated),
+                            IconButton(
+                                onPressed: () async {
+                                  await todoService.deleteTodo(index);
+
+                                  _loadTodos();
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
       ),
     );
   }
